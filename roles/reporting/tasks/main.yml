@@ -7,8 +7,10 @@
   tags: [reporting]
 
 - name: Generate report artifacts
-  ansible.builtin.command: python3 scripts/generate_reports.py /tmp/hardening-summary.json reports
-  args:
-    chdir: "{{ playbook_dir }}/.."
+  ansible.builtin.command:
+    cmd: >-
+      python3 {{ playbook_dir }}/../scripts/generate_reports.py
+      /tmp/hardening-summary.json
+      {{ playbook_dir }}/../reports
   changed_when: true
   tags: [reporting]
