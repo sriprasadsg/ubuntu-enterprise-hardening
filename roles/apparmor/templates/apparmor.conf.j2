@@ -1,1 +1,5 @@
-# Managed by Ansible for apparmor
+# Managed by Ansible for AppArmor hardening
+#include <tunables/global>
+profile /usr/bin/man flags=(attach_disconnected,mediate_execute) {
+  /usr/bin/man r,
+}
