@@ -1,0 +1,30 @@
+---
+- name: Install filesystem packages
+  ansible.builtin.package:
+    name: "{ filesystem_packages }"
+    state: present
+  when: filesystem_packages | length > 0
+  tags: [filesystem, packages, hardening]
+
+- name: Deploy filesystem configuration
+  ansible.builtin.template:
+    src: "filesystem.conf.j2"
+    dest: "{ filesystem_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - filesystem_config_path | length > 0
+    - filesystem_config_template | length > 0
+  notify:
+    - Restart filesystem
+  tags: [filesystem, config, hardening]
+
+- name: Ensure filesystem service state
+  ansible.builtin.service:
+    name: "{ filesystem_service_name | default('filesystem') }"
+    state: started
+    enabled: true
+  when: filesystem_service_name | default('') | length > 0
+  tags: [filesystem, services, hardening]

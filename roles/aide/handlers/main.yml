@@ -1,0 +1,7 @@
+---
+- name: Restart aide
+  ansible.builtin.service:
+    name: "{ aide_service_name | default('aide') }"
+    state: restarted
+  when: aide_service_name | default('') | length > 0
+  listen: "Restart aide"

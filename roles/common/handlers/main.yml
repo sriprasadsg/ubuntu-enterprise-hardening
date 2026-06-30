@@ -1,0 +1,7 @@
+---
+- name: Restart common
+  ansible.builtin.service:
+    name: "{ common_service_name | default('common') }"
+    state: restarted
+  when: common_service_name | default('') | length > 0
+  listen: "Restart common"

@@ -1,0 +1,7 @@
+---
+- name: Restart apparmor
+  ansible.builtin.service:
+    name: "{ apparmor_service_name | default('apparmor') }"
+    state: restarted
+  when: apparmor_service_name | default('') | length > 0
+  listen: "Restart apparmor"

@@ -1,0 +1,30 @@
+---
+- name: Install firewall packages
+  ansible.builtin.package:
+    name: "{ firewall_packages }"
+    state: present
+  when: firewall_packages | length > 0
+  tags: [firewall, packages, hardening]
+
+- name: Deploy firewall configuration
+  ansible.builtin.template:
+    src: "firewall.conf.j2"
+    dest: "{ firewall_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - firewall_config_path | length > 0
+    - firewall_config_template | length > 0
+  notify:
+    - Restart firewall
+  tags: [firewall, config, hardening]
+
+- name: Ensure firewall service state
+  ansible.builtin.service:
+    name: "{ firewall_service_name | default('firewall') }"
+    state: started
+    enabled: true
+  when: firewall_service_name | default('') | length > 0
+  tags: [firewall, services, hardening]

@@ -1,0 +1,5 @@
+---
+postfix_packages: []
+postfix_service_name: ""
+postfix_config_path: ""
+postfix_config_template: ""

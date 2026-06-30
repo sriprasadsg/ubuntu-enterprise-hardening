@@ -1,0 +1,7 @@
+---
+- name: Restart healthcheck
+  ansible.builtin.service:
+    name: "{ healthcheck_service_name | default('healthcheck') }"
+    state: restarted
+  when: healthcheck_service_name | default('') | length > 0
+  listen: "Restart healthcheck"

@@ -1,0 +1,30 @@
+---
+- name: Install cron packages
+  ansible.builtin.package:
+    name: "{ cron_packages }"
+    state: present
+  when: cron_packages | length > 0
+  tags: [cron, packages, hardening]
+
+- name: Deploy cron configuration
+  ansible.builtin.template:
+    src: "cron.conf.j2"
+    dest: "{ cron_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - cron_config_path | length > 0
+    - cron_config_template | length > 0
+  notify:
+    - Restart cron
+  tags: [cron, config, hardening]
+
+- name: Ensure cron service state
+  ansible.builtin.service:
+    name: "{ cron_service_name | default('cron') }"
+    state: started
+    enabled: true
+  when: cron_service_name | default('') | length > 0
+  tags: [cron, services, hardening]

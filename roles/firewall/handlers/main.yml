@@ -1,0 +1,7 @@
+---
+- name: Restart firewall
+  ansible.builtin.service:
+    name: "{ firewall_service_name | default('firewall') }"
+    state: restarted
+  when: firewall_service_name | default('') | length > 0
+  listen: "Restart firewall"

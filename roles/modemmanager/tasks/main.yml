@@ -1,0 +1,30 @@
+---
+- name: Install modemmanager packages
+  ansible.builtin.package:
+    name: "{ modemmanager_packages }"
+    state: present
+  when: modemmanager_packages | length > 0
+  tags: [modemmanager, packages, hardening]
+
+- name: Deploy modemmanager configuration
+  ansible.builtin.template:
+    src: "modemmanager.conf.j2"
+    dest: "{ modemmanager_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - modemmanager_config_path | length > 0
+    - modemmanager_config_template | length > 0
+  notify:
+    - Restart modemmanager
+  tags: [modemmanager, config, hardening]
+
+- name: Ensure modemmanager service state
+  ansible.builtin.service:
+    name: "{ modemmanager_service_name | default('modemmanager') }"
+    state: started
+    enabled: true
+  when: modemmanager_service_name | default('') | length > 0
+  tags: [modemmanager, services, hardening]

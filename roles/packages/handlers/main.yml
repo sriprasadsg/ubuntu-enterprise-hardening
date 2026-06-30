@@ -1,0 +1,7 @@
+---
+- name: Restart packages
+  ansible.builtin.service:
+    name: "{ packages_service_name | default('packages') }"
+    state: restarted
+  when: packages_service_name | default('') | length > 0
+  listen: "Restart packages"

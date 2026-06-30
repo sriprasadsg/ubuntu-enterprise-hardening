@@ -1,0 +1,7 @@
+---
+- name: Restart sssd
+  ansible.builtin.service:
+    name: "{ sssd_service_name | default('sssd') }"
+    state: restarted
+  when: sssd_service_name | default('') | length > 0
+  listen: "Restart sssd"

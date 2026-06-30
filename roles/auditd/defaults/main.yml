@@ -1,0 +1,5 @@
+---
+auditd_packages: []
+auditd_service_name: ""
+auditd_config_path: ""
+auditd_config_template: ""

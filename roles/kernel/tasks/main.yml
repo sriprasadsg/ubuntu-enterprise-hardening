@@ -1,0 +1,30 @@
+---
+- name: Install kernel packages
+  ansible.builtin.package:
+    name: "{ kernel_packages }"
+    state: present
+  when: kernel_packages | length > 0
+  tags: [kernel, packages, hardening]
+
+- name: Deploy kernel configuration
+  ansible.builtin.template:
+    src: "kernel.conf.j2"
+    dest: "{ kernel_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - kernel_config_path | length > 0
+    - kernel_config_template | length > 0
+  notify:
+    - Restart kernel
+  tags: [kernel, config, hardening]
+
+- name: Ensure kernel service state
+  ansible.builtin.service:
+    name: "{ kernel_service_name | default('kernel') }"
+    state: started
+    enabled: true
+  when: kernel_service_name | default('') | length > 0
+  tags: [kernel, services, hardening]

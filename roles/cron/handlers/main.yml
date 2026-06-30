@@ -1,0 +1,7 @@
+---
+- name: Restart cron
+  ansible.builtin.service:
+    name: "{ cron_service_name | default('cron') }"
+    state: restarted
+  when: cron_service_name | default('') | length > 0
+  listen: "Restart cron"

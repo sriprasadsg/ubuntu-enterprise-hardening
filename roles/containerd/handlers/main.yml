@@ -1,0 +1,7 @@
+---
+- name: Restart containerd
+  ansible.builtin.service:
+    name: "{ containerd_service_name | default('containerd') }"
+    state: restarted
+  when: containerd_service_name | default('') | length > 0
+  listen: "Restart containerd"

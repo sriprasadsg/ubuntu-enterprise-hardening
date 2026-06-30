@@ -1,0 +1,30 @@
+---
+- name: Install cups packages
+  ansible.builtin.package:
+    name: "{ cups_packages }"
+    state: present
+  when: cups_packages | length > 0
+  tags: [cups, packages, hardening]
+
+- name: Deploy cups configuration
+  ansible.builtin.template:
+    src: "cups.conf.j2"
+    dest: "{ cups_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - cups_config_path | length > 0
+    - cups_config_template | length > 0
+  notify:
+    - Restart cups
+  tags: [cups, config, hardening]
+
+- name: Ensure cups service state
+  ansible.builtin.service:
+    name: "{ cups_service_name | default('cups') }"
+    state: started
+    enabled: true
+  when: cups_service_name | default('') | length > 0
+  tags: [cups, services, hardening]

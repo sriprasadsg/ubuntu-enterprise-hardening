@@ -1,0 +1,30 @@
+---
+- name: Install fail2ban packages
+  ansible.builtin.package:
+    name: "{ fail2ban_packages }"
+    state: present
+  when: fail2ban_packages | length > 0
+  tags: [fail2ban, packages, hardening]
+
+- name: Deploy fail2ban configuration
+  ansible.builtin.template:
+    src: "fail2ban.conf.j2"
+    dest: "{ fail2ban_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - fail2ban_config_path | length > 0
+    - fail2ban_config_template | length > 0
+  notify:
+    - Restart fail2ban
+  tags: [fail2ban, config, hardening]
+
+- name: Ensure fail2ban service state
+  ansible.builtin.service:
+    name: "{ fail2ban_service_name | default('fail2ban') }"
+    state: started
+    enabled: true
+  when: fail2ban_service_name | default('') | length > 0
+  tags: [fail2ban, services, hardening]

@@ -1,0 +1,30 @@
+---
+- name: Install usbguard packages
+  ansible.builtin.package:
+    name: "{ usbguard_packages }"
+    state: present
+  when: usbguard_packages | length > 0
+  tags: [usbguard, packages, hardening]
+
+- name: Deploy usbguard configuration
+  ansible.builtin.template:
+    src: "usbguard.conf.j2"
+    dest: "{ usbguard_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - usbguard_config_path | length > 0
+    - usbguard_config_template | length > 0
+  notify:
+    - Restart usbguard
+  tags: [usbguard, config, hardening]
+
+- name: Ensure usbguard service state
+  ansible.builtin.service:
+    name: "{ usbguard_service_name | default('usbguard') }"
+    state: started
+    enabled: true
+  when: usbguard_service_name | default('') | length > 0
+  tags: [usbguard, services, hardening]

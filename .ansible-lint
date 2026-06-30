@@ -1,0 +1,8 @@
+---
+skip_list:
+  - package-latest
+  - no-handler
+  - role-name
+  - fqcn-builtins
+  - var-naming
+  - meta-incorrect

@@ -1,0 +1,14 @@
+---
+- name: Prepare report directory
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/../reports"
+    state: directory
+    mode: '0755'
+  tags: [reporting]
+
+- name: Generate report artifacts
+  ansible.builtin.command: python3 scripts/generate_reports.py /tmp/hardening-summary.json reports
+  args:
+    chdir: "{{ playbook_dir }}/.."
+  changed_when: true
+  tags: [reporting]

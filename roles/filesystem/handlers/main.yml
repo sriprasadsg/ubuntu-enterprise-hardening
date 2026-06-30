@@ -1,0 +1,7 @@
+---
+- name: Restart filesystem
+  ansible.builtin.service:
+    name: "{ filesystem_service_name | default('filesystem') }"
+    state: restarted
+  when: filesystem_service_name | default('') | length > 0
+  listen: "Restart filesystem"

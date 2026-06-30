@@ -1,0 +1,7 @@
+---
+role_profile: qa
+packages_to_install:
+  - unattended-upgrades
+  - openssh-server
+  - auditd
+  - fail2ban

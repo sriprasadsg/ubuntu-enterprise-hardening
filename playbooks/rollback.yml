@@ -1,0 +1,8 @@
+---
+- name: Roll back hardening changes
+  hosts: all
+  become: true
+  gather_facts: false
+  tags: [rollback]
+  roles:
+    - role: rollback

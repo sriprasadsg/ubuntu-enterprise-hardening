@@ -1,0 +1,30 @@
+---
+- name: Install apparmor packages
+  ansible.builtin.package:
+    name: "{ apparmor_packages }"
+    state: present
+  when: apparmor_packages | length > 0
+  tags: [apparmor, packages, hardening]
+
+- name: Deploy apparmor configuration
+  ansible.builtin.template:
+    src: "apparmor.conf.j2"
+    dest: "{ apparmor_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - apparmor_config_path | length > 0
+    - apparmor_config_template | length > 0
+  notify:
+    - Restart apparmor
+  tags: [apparmor, config, hardening]
+
+- name: Ensure apparmor service state
+  ansible.builtin.service:
+    name: "{ apparmor_service_name | default('apparmor') }"
+    state: started
+    enabled: true
+  when: apparmor_service_name | default('') | length > 0
+  tags: [apparmor, services, hardening]

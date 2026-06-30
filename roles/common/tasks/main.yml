@@ -1,0 +1,30 @@
+---
+- name: Install common packages
+  ansible.builtin.package:
+    name: "{ common_packages }"
+    state: present
+  when: common_packages | length > 0
+  tags: [common, packages, hardening]
+
+- name: Deploy common configuration
+  ansible.builtin.template:
+    src: "common.conf.j2"
+    dest: "{ common_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - common_config_path | length > 0
+    - common_config_template | length > 0
+  notify:
+    - Restart common
+  tags: [common, config, hardening]
+
+- name: Ensure common service state
+  ansible.builtin.service:
+    name: "{ common_service_name | default('common') }"
+    state: started
+    enabled: true
+  when: common_service_name | default('') | length > 0
+  tags: [common, services, hardening]

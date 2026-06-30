@@ -1,0 +1,30 @@
+---
+- name: Install sssd packages
+  ansible.builtin.package:
+    name: "{ sssd_packages }"
+    state: present
+  when: sssd_packages | length > 0
+  tags: [sssd, packages, hardening]
+
+- name: Deploy sssd configuration
+  ansible.builtin.template:
+    src: "sssd.conf.j2"
+    dest: "{ sssd_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - sssd_config_path | length > 0
+    - sssd_config_template | length > 0
+  notify:
+    - Restart sssd
+  tags: [sssd, config, hardening]
+
+- name: Ensure sssd service state
+  ansible.builtin.service:
+    name: "{ sssd_service_name | default('sssd') }"
+    state: started
+    enabled: true
+  when: sssd_service_name | default('') | length > 0
+  tags: [sssd, services, hardening]

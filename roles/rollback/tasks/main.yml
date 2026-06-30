@@ -1,0 +1,15 @@
+---
+- name: Restore backups from backup directory
+  ansible.builtin.shell: |
+    set -e
+    backup_dir={{ backup_dir }}
+    if [ -d "$backup_dir" ]; then
+      find "$backup_dir" -type f | while read -r file; do
+        target="${file#${backup_dir}/}"
+        install -m 0600 "$file" "$target"
+      done
+    fi
+  args:
+    executable: /bin/bash
+  changed_when: true
+  tags: [rollback]

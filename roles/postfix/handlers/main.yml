@@ -1,0 +1,7 @@
+---
+- name: Restart postfix
+  ansible.builtin.service:
+    name: "{ postfix_service_name | default('postfix') }"
+    state: restarted
+  when: postfix_service_name | default('') | length > 0
+  listen: "Restart postfix"

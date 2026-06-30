@@ -1,0 +1,7 @@
+---
+- name: Restart rollback
+  ansible.builtin.service:
+    name: "{ rollback_service_name | default('rollback') }"
+    state: restarted
+  when: rollback_service_name | default('') | length > 0
+  listen: "Restart rollback"

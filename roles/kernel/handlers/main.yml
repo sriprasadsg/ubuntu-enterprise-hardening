@@ -1,0 +1,7 @@
+---
+- name: Restart kernel
+  ansible.builtin.service:
+    name: "{ kernel_service_name | default('kernel') }"
+    state: restarted
+  when: kernel_service_name | default('') | length > 0
+  listen: "Restart kernel"

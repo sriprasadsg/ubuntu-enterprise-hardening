@@ -1,0 +1,13 @@
+---
+- name: Molecule smoke test
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Assert hardening playbook exists
+      ansible.builtin.stat:
+        path: playbooks/harden.yml
+      register: playbook_stat
+    - name: Fail when playbook is missing
+      ansible.builtin.assert:
+        that:
+          - playbook_stat.stat.exists

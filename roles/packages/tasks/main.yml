@@ -1,0 +1,30 @@
+---
+- name: Install packages packages
+  ansible.builtin.package:
+    name: "{ packages_packages }"
+    state: present
+  when: packages_packages | length > 0
+  tags: [packages, packages, hardening]
+
+- name: Deploy packages configuration
+  ansible.builtin.template:
+    src: "packages.conf.j2"
+    dest: "{ packages_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - packages_config_path | length > 0
+    - packages_config_template | length > 0
+  notify:
+    - Restart packages
+  tags: [packages, config, hardening]
+
+- name: Ensure packages service state
+  ansible.builtin.service:
+    name: "{ packages_service_name | default('packages') }"
+    state: started
+    enabled: true
+  when: packages_service_name | default('') | length > 0
+  tags: [packages, services, hardening]

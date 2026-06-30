@@ -1,0 +1,7 @@
+---
+- name: Restart bluetooth
+  ansible.builtin.service:
+    name: "{ bluetooth_service_name | default('bluetooth') }"
+    state: restarted
+  when: bluetooth_service_name | default('') | length > 0
+  listen: "Restart bluetooth"

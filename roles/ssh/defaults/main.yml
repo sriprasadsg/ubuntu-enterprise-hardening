@@ -1,0 +1,5 @@
+---
+ssh_packages: []
+ssh_service_name: ""
+ssh_config_path: ""
+ssh_config_template: ""

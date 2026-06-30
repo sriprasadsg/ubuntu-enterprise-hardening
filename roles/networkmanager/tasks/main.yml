@@ -1,0 +1,30 @@
+---
+- name: Install networkmanager packages
+  ansible.builtin.package:
+    name: "{ networkmanager_packages }"
+    state: present
+  when: networkmanager_packages | length > 0
+  tags: [networkmanager, packages, hardening]
+
+- name: Deploy networkmanager configuration
+  ansible.builtin.template:
+    src: "networkmanager.conf.j2"
+    dest: "{ networkmanager_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - networkmanager_config_path | length > 0
+    - networkmanager_config_template | length > 0
+  notify:
+    - Restart networkmanager
+  tags: [networkmanager, config, hardening]
+
+- name: Ensure networkmanager service state
+  ansible.builtin.service:
+    name: "{ networkmanager_service_name | default('networkmanager') }"
+    state: started
+    enabled: true
+  when: networkmanager_service_name | default('') | length > 0
+  tags: [networkmanager, services, hardening]

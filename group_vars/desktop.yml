@@ -1,0 +1,18 @@
+---
+role_profile: desktop
+packages_to_install:
+  - unattended-upgrades
+  - clamav
+  - apparmor-utils
+  - auditd
+  - fail2ban
+  - ufw
+  - openssh-server
+  - aide
+  - gnome-shell
+  - gdm3
+  - network-manager
+  - modemmanager
+  - cups
+  - bluez
+  - usbguard

@@ -1,0 +1,30 @@
+---
+- name: Install gdm packages
+  ansible.builtin.package:
+    name: "{ gdm_packages }"
+    state: present
+  when: gdm_packages | length > 0
+  tags: [gdm, packages, hardening]
+
+- name: Deploy gdm configuration
+  ansible.builtin.template:
+    src: "gdm.conf.j2"
+    dest: "{ gdm_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - gdm_config_path | length > 0
+    - gdm_config_template | length > 0
+  notify:
+    - Restart gdm
+  tags: [gdm, config, hardening]
+
+- name: Ensure gdm service state
+  ansible.builtin.service:
+    name: "{ gdm_service_name | default('gdm') }"
+    state: started
+    enabled: true
+  when: gdm_service_name | default('') | length > 0
+  tags: [gdm, services, hardening]

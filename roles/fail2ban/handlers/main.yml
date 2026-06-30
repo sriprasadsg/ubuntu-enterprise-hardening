@@ -1,0 +1,7 @@
+---
+- name: Restart fail2ban
+  ansible.builtin.service:
+    name: "{ fail2ban_service_name | default('fail2ban') }"
+    state: restarted
+  when: fail2ban_service_name | default('') | length > 0
+  listen: "Restart fail2ban"

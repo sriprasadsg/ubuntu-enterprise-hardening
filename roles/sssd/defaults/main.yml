@@ -1,0 +1,5 @@
+---
+sssd_packages: []
+sssd_service_name: ""
+sssd_config_path: ""
+sssd_config_template: ""

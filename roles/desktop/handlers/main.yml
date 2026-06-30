@@ -1,0 +1,7 @@
+---
+- name: Restart desktop
+  ansible.builtin.service:
+    name: "{ desktop_service_name | default('desktop') }"
+    state: restarted
+  when: desktop_service_name | default('') | length > 0
+  listen: "Restart desktop"

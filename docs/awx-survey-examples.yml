@@ -1,0 +1,9 @@
+---
+# Example AWX survey variables
+environment_type: production
+role_profile: production
+ssh_password_authentication: false
+ssh_permit_root_login: "no"
+security_updates_auto: true
+firewall_enabled: true
+apparmor_enabled: true

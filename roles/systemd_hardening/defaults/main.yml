@@ -1,0 +1,15 @@
+---
+systemd_override_services:
+  - ssh
+  - docker
+  - containerd
+  - auditd
+  - fail2ban
+  - rsyslog
+  - cron
+  - postfix
+  - squid
+  - sssd
+  - gdm
+  - NetworkManager
+  - cups

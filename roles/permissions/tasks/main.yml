@@ -1,0 +1,30 @@
+---
+- name: Install permissions packages
+  ansible.builtin.package:
+    name: "{ permissions_packages }"
+    state: present
+  when: permissions_packages | length > 0
+  tags: [permissions, packages, hardening]
+
+- name: Deploy permissions configuration
+  ansible.builtin.template:
+    src: "permissions.conf.j2"
+    dest: "{ permissions_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - permissions_config_path | length > 0
+    - permissions_config_template | length > 0
+  notify:
+    - Restart permissions
+  tags: [permissions, config, hardening]
+
+- name: Ensure permissions service state
+  ansible.builtin.service:
+    name: "{ permissions_service_name | default('permissions') }"
+    state: started
+    enabled: true
+  when: permissions_service_name | default('') | length > 0
+  tags: [permissions, services, hardening]

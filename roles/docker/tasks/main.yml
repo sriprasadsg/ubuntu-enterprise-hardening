@@ -1,0 +1,30 @@
+---
+- name: Install docker packages
+  ansible.builtin.package:
+    name: "{ docker_packages }"
+    state: present
+  when: docker_packages | length > 0
+  tags: [docker, packages, hardening]
+
+- name: Deploy docker configuration
+  ansible.builtin.template:
+    src: "docker.conf.j2"
+    dest: "{ docker_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - docker_config_path | length > 0
+    - docker_config_template | length > 0
+  notify:
+    - Restart docker
+  tags: [docker, config, hardening]
+
+- name: Ensure docker service state
+  ansible.builtin.service:
+    name: "{ docker_service_name | default('docker') }"
+    state: started
+    enabled: true
+  when: docker_service_name | default('') | length > 0
+  tags: [docker, services, hardening]

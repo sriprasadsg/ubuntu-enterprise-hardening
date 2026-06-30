@@ -1,0 +1,30 @@
+---
+- name: Install squid packages
+  ansible.builtin.package:
+    name: "{ squid_packages }"
+    state: present
+  when: squid_packages | length > 0
+  tags: [squid, packages, hardening]
+
+- name: Deploy squid configuration
+  ansible.builtin.template:
+    src: "squid.conf.j2"
+    dest: "{ squid_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - squid_config_path | length > 0
+    - squid_config_template | length > 0
+  notify:
+    - Restart squid
+  tags: [squid, config, hardening]
+
+- name: Ensure squid service state
+  ansible.builtin.service:
+    name: "{ squid_service_name | default('squid') }"
+    state: started
+    enabled: true
+  when: squid_service_name | default('') | length > 0
+  tags: [squid, services, hardening]

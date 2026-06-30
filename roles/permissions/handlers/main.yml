@@ -1,0 +1,7 @@
+---
+- name: Restart permissions
+  ansible.builtin.service:
+    name: "{ permissions_service_name | default('permissions') }"
+    state: restarted
+  when: permissions_service_name | default('') | length > 0
+  listen: "Restart permissions"

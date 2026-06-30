@@ -1,0 +1,46 @@
+---
+- name: Apply enterprise Ubuntu hardening
+  hosts: all
+  become: true
+  gather_facts: true
+  tags: [hardening, ubuntu, enterprise]
+  pre_tasks:
+    - name: Ensure backup directory exists
+      ansible.builtin.file:
+        path: "{{ backup_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0700'
+      tags: [backup, hardening]
+  roles:
+    - role: common
+    - role: packages
+    - role: ssh
+    - role: firewall
+    - role: filesystem
+    - role: permissions
+    - role: kernel
+    - role: sysctl
+    - role: apparmor
+    - role: aide
+    - role: auditd
+    - role: fail2ban
+    - role: cron
+    - role: postfix
+    - role: docker
+    - role: containerd
+    - role: squid
+    - role: sssd
+    - role: desktop
+    - role: gdm
+    - role: networkmanager
+    - role: modemmanager
+    - role: cups
+    - role: bluetooth
+    - role: usbguard
+    - role: services
+    - role: systemd_hardening
+    - role: verification
+    - role: reporting
+    - role: healthcheck

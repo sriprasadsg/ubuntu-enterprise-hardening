@@ -1,0 +1,30 @@
+---
+- name: Install containerd packages
+  ansible.builtin.package:
+    name: "{ containerd_packages }"
+    state: present
+  when: containerd_packages | length > 0
+  tags: [containerd, packages, hardening]
+
+- name: Deploy containerd configuration
+  ansible.builtin.template:
+    src: "containerd.conf.j2"
+    dest: "{ containerd_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - containerd_config_path | length > 0
+    - containerd_config_template | length > 0
+  notify:
+    - Restart containerd
+  tags: [containerd, config, hardening]
+
+- name: Ensure containerd service state
+  ansible.builtin.service:
+    name: "{ containerd_service_name | default('containerd') }"
+    state: started
+    enabled: true
+  when: containerd_service_name | default('') | length > 0
+  tags: [containerd, services, hardening]

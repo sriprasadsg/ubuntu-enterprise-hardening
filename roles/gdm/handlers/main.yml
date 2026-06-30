@@ -1,0 +1,7 @@
+---
+- name: Restart gdm
+  ansible.builtin.service:
+    name: "{ gdm_service_name | default('gdm') }"
+    state: restarted
+  when: gdm_service_name | default('') | length > 0
+  listen: "Restart gdm"

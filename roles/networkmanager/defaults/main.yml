@@ -1,0 +1,5 @@
+---
+networkmanager_packages: []
+networkmanager_service_name: ""
+networkmanager_config_path: ""
+networkmanager_config_template: ""

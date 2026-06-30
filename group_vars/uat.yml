@@ -1,0 +1,7 @@
+---
+role_profile: uat
+packages_to_install:
+  - unattended-upgrades
+  - openssh-server
+  - ufw
+  - fail2ban

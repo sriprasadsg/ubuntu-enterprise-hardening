@@ -1,0 +1,30 @@
+---
+- name: Install desktop packages
+  ansible.builtin.package:
+    name: "{ desktop_packages }"
+    state: present
+  when: desktop_packages | length > 0
+  tags: [desktop, packages, hardening]
+
+- name: Deploy desktop configuration
+  ansible.builtin.template:
+    src: "desktop.conf.j2"
+    dest: "{ desktop_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - desktop_config_path | length > 0
+    - desktop_config_template | length > 0
+  notify:
+    - Restart desktop
+  tags: [desktop, config, hardening]
+
+- name: Ensure desktop service state
+  ansible.builtin.service:
+    name: "{ desktop_service_name | default('desktop') }"
+    state: started
+    enabled: true
+  when: desktop_service_name | default('') | length > 0
+  tags: [desktop, services, hardening]

@@ -1,0 +1,24 @@
+---
+- name: Verify SSH server configuration
+  ansible.builtin.command: sshd -T
+  changed_when: false
+  failed_when: false
+  tags: [verification, ssh]
+
+- name: Verify firewall state
+  ansible.builtin.command: ufw status numbered
+  changed_when: false
+  failed_when: false
+  tags: [verification, firewall]
+
+- name: Verify auditd state
+  ansible.builtin.command: auditctl -s
+  changed_when: false
+  failed_when: false
+  tags: [verification, auditd]
+
+- name: Verify systemd security report
+  ansible.builtin.command: systemd-analyze security --no-pager --offline
+  changed_when: false
+  failed_when: false
+  tags: [verification, systemd]

@@ -1,0 +1,30 @@
+---
+- name: Install ssh packages
+  ansible.builtin.package:
+    name: "{ ssh_packages }"
+    state: present
+  when: ssh_packages | length > 0
+  tags: [ssh, packages, hardening]
+
+- name: Deploy ssh configuration
+  ansible.builtin.template:
+    src: "ssh.conf.j2"
+    dest: "{ ssh_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - ssh_config_path | length > 0
+    - ssh_config_template | length > 0
+  notify:
+    - Restart ssh
+  tags: [ssh, config, hardening]
+
+- name: Ensure ssh service state
+  ansible.builtin.service:
+    name: "{ ssh_service_name | default('ssh') }"
+    state: started
+    enabled: true
+  when: ssh_service_name | default('') | length > 0
+  tags: [ssh, services, hardening]

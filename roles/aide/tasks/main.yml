@@ -1,0 +1,30 @@
+---
+- name: Install aide packages
+  ansible.builtin.package:
+    name: "{ aide_packages }"
+    state: present
+  when: aide_packages | length > 0
+  tags: [aide, packages, hardening]
+
+- name: Deploy aide configuration
+  ansible.builtin.template:
+    src: "aide.conf.j2"
+    dest: "{ aide_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - aide_config_path | length > 0
+    - aide_config_template | length > 0
+  notify:
+    - Restart aide
+  tags: [aide, config, hardening]
+
+- name: Ensure aide service state
+  ansible.builtin.service:
+    name: "{ aide_service_name | default('aide') }"
+    state: started
+    enabled: true
+  when: aide_service_name | default('') | length > 0
+  tags: [aide, services, hardening]

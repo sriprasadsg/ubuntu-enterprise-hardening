@@ -1,0 +1,27 @@
+---
+- name: Ensure override directories exist
+  ansible.builtin.file:
+    path: "/etc/systemd/system/{{ item }}.service.d"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ systemd_override_services }}"
+  tags: [systemd, hardening]
+
+- name: Deploy systemd override profiles
+  ansible.builtin.template:
+    src: override.conf.j2
+    dest: "/etc/systemd/system/{{ item }}.service.d/override.conf"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+  loop: "{{ systemd_override_services }}"
+  notify: Reload systemd
+  tags: [systemd, hardening]
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+  tags: [systemd, hardening]

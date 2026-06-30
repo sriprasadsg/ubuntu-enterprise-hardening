@@ -1,0 +1,14 @@
+---
+role_profile: production
+packages_to_install:
+  - unattended-upgrades
+  - apparmor-utils
+  - auditd
+  - fail2ban
+  - ufw
+  - openssh-server
+  - aide
+  - docker.io
+  - containerd
+  - squid
+  - sssd

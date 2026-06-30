@@ -1,0 +1,5 @@
+---
+squid_packages: []
+squid_service_name: ""
+squid_config_path: ""
+squid_config_template: ""

@@ -1,0 +1,7 @@
+---
+- name: Restart reporting
+  ansible.builtin.service:
+    name: "{ reporting_service_name | default('reporting') }"
+    state: restarted
+  when: reporting_service_name | default('') | length > 0
+  listen: "Restart reporting"

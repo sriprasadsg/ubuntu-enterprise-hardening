@@ -1,0 +1,7 @@
+---
+- name: Restart verification
+  ansible.builtin.service:
+    name: "{ verification_service_name | default('verification') }"
+    state: restarted
+  when: verification_service_name | default('') | length > 0
+  listen: "Restart verification"

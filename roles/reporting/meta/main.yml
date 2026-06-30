@@ -1,0 +1,11 @@
+---
+galaxy_info:
+  author: Enterprise Hardening Team
+  description: Enterprise Ubuntu hardening role
+  license: MIT
+  min_ansible_version: "2.16"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+dependencies: []

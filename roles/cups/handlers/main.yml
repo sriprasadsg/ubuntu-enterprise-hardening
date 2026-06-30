@@ -1,0 +1,7 @@
+---
+- name: Restart cups
+  ansible.builtin.service:
+    name: "{ cups_service_name | default('cups') }"
+    state: restarted
+  when: cups_service_name | default('') | length > 0
+  listen: "Restart cups"

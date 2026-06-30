@@ -1,0 +1,5 @@
+---
+usbguard_packages: []
+usbguard_service_name: ""
+usbguard_config_path: ""
+usbguard_config_template: ""

@@ -1,0 +1,30 @@
+---
+- name: Install sysctl packages
+  ansible.builtin.package:
+    name: "{ sysctl_packages }"
+    state: present
+  when: sysctl_packages | length > 0
+  tags: [sysctl, packages, hardening]
+
+- name: Deploy sysctl configuration
+  ansible.builtin.template:
+    src: "sysctl.conf.j2"
+    dest: "{ sysctl_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - sysctl_config_path | length > 0
+    - sysctl_config_template | length > 0
+  notify:
+    - Restart sysctl
+  tags: [sysctl, config, hardening]
+
+- name: Ensure sysctl service state
+  ansible.builtin.service:
+    name: "{ sysctl_service_name | default('sysctl') }"
+    state: started
+    enabled: true
+  when: sysctl_service_name | default('') | length > 0
+  tags: [sysctl, services, hardening]

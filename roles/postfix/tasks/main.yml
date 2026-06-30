@@ -1,0 +1,30 @@
+---
+- name: Install postfix packages
+  ansible.builtin.package:
+    name: "{ postfix_packages }"
+    state: present
+  when: postfix_packages | length > 0
+  tags: [postfix, packages, hardening]
+
+- name: Deploy postfix configuration
+  ansible.builtin.template:
+    src: "postfix.conf.j2"
+    dest: "{ postfix_config_path }"
+    owner: root
+    group: root
+    mode: "0600"
+    backup: true
+  when:
+    - postfix_config_path | length > 0
+    - postfix_config_template | length > 0
+  notify:
+    - Restart postfix
+  tags: [postfix, config, hardening]
+
+- name: Ensure postfix service state
+  ansible.builtin.service:
+    name: "{ postfix_service_name | default('postfix') }"
+    state: started
+    enabled: true
+  when: postfix_service_name | default('') | length > 0
+  tags: [postfix, services, hardening]

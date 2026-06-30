@@ -1,0 +1,7 @@
+---
+- name: Restart modemmanager
+  ansible.builtin.service:
+    name: "{ modemmanager_service_name | default('modemmanager') }"
+    state: restarted
+  when: modemmanager_service_name | default('') | length > 0
+  listen: "Restart modemmanager"
