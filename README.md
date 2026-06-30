@@ -26,9 +26,54 @@ This repository provides an enterprise-grade Ansible framework for hardening Ubu
    - [group_vars/all.yml](group_vars/all.yml)
 3. Apply the hardening playbook:
    ```bash
-   ansible-playbook playbooks/harden.yml -i inventories/production/hosts.yml
+   ANSIBLE_CONFIG=ansible.cfg ansible-playbook playbooks/harden.yml -i inventories/production/hosts.yml
    ```
 4. Review artifact outputs in [reports](reports).
+
+## Common commands
+
+### Install and bootstrap
+```bash
+python3 -m pip install --user ansible ansible-lint yamllint
+ansible-galaxy collection install -r requirements.yml
+```
+
+### Dry run and syntax validation
+```bash
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook --check playbooks/harden.yml -i inventories/production/hosts.yml
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook --syntax-check playbooks/harden.yml -i inventories/production/hosts.yml
+```
+
+### Apply hardening
+```bash
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook playbooks/harden.yml -i inventories/production/hosts.yml
+```
+
+### Roll back changes
+```bash
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook playbooks/rollback.yml -i inventories/production/hosts.yml
+```
+
+### Run tests
+```bash
+python3 -m unittest -v tests.test_generate_reports
+python3 -m unittest -v tests.test_compliance_roles
+```
+
+### Generate reports manually
+```bash
+python3 scripts/generate_reports.py /tmp/hardening-summary.json reports
+```
+
+### Health checks
+```bash
+bash scripts/healthcheck.sh
+```
+
+### AWX / automation platform usage
+```bash
+ANSIBLE_CONFIG=ansible.cfg ansible-playbook playbooks/harden.yml -i inventories/awx/hosts.yml
+```
 
 ## Documentation
 
