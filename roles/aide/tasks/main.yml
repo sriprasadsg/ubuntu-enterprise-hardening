@@ -21,6 +21,24 @@
     - Restart aide
   tags: [aide, config, hardening]
 
+- name: Initialize AIDE database
+  ansible.builtin.command:
+    cmd: aideinit
+    creates: /var/lib/aide/aide.db
+  async: 3600
+  poll: 0
+  register: aide_init_job
+  tags: [aide, hardening]
+
+- name: Wait for AIDE initialization to complete
+  ansible.builtin.async_status:
+    jid: "{{ aide_init_job.ansible_job_id }}"
+  register: aide_init_result
+  until: aide_init_result.finished
+  retries: 120
+  delay: 30
+  tags: [aide, hardening]
+
 - name: Ensure aide service state
   ansible.builtin.service:
     name: "{ aide_service_name | default('aide') }"

@@ -1,0 +1,64 @@
+---
+- name: Configure password hashing rounds
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^#?SHA_CRYPT_MIN_ROUNDS'
+    line: 'SHA_CRYPT_MIN_ROUNDS 5000'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure maximum password age
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^#?PASS_MAX_DAYS'
+    line: 'PASS_MAX_DAYS   90'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure minimum password age
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^#?PASS_MIN_DAYS'
+    line: 'PASS_MIN_DAYS   1'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure password warning days
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^#?PASS_WARN_AGE'
+    line: 'PASS_WARN_AGE   14'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure stricter umask
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^#?UMASK\s'
+    line: 'UMASK           027'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure umask for user directories
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^#?USERGROUPS_ENAB'
+    line: 'USERGROUPS_ENAB yes'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure umask in /etc/profile
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    regexp: 'umask 022'
+    line: 'umask 027'
+    state: present
+  tags: [login_defs, hardening, auth]
+
+- name: Configure umask in /etc/bash.bashrc
+  ansible.builtin.lineinfile:
+    path: /etc/bash.bashrc
+    regexp: 'umask 022'
+    line: 'umask 027'
+    state: present
+  tags: [login_defs, hardening, auth]

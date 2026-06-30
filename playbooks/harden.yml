@@ -20,8 +20,10 @@
   roles:
     - role: common
     - role: packages
+    - role: login_defs
     - role: ssh
     - role: firewall
+    - role: grub
     - role: filesystem
     - role: permissions
     - role: kernel

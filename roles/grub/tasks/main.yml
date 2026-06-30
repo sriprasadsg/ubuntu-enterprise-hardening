@@ -1,0 +1,39 @@
+---
+- name: Check if GRUB bootloader exists
+  ansible.builtin.stat:
+    path: /boot/grub/grub.cfg
+  register: grub_cfg
+  tags: [grub, hardening, boot]
+
+- name: Create GRUB user for password authentication
+  ansible.builtin.lineinfile:
+    path: /etc/grub.d/40_custom
+    regexp: '^set superusers'
+    line: 'set superusers="root"'
+    create: yes
+  when: grub_cfg.stat.exists
+  tags: [grub, hardening, boot]
+
+- name: Create GRUB password hash
+  ansible.builtin.shell:
+    cmd: echo -e "{{ grub_password }}\n{{ grub_password }}" | grub-mkpasswd-pbkdf2 | grep -oP 'grub.pbkdf2.sha512.10000.\K.*'
+  register: grub_password_hash
+  when: grub_cfg.stat.exists and grub_password is defined
+  changed_when: false
+  no_log: true
+  tags: [grub, hardening, boot]
+
+- name: Add GRUB password configuration
+  ansible.builtin.lineinfile:
+    path: /etc/grub.d/40_custom
+    regexp: '^password_pbkdf2'
+    line: 'password_pbkdf2 root {{ grub_password_hash.stdout }}'
+    create: yes
+  when: grub_cfg.stat.exists and grub_password_hash is defined
+  tags: [grub, hardening, boot]
+
+- name: Update GRUB configuration
+  ansible.builtin.command: update-grub
+  when: grub_cfg.stat.exists
+  changed_when: true
+  tags: [grub, hardening, boot]

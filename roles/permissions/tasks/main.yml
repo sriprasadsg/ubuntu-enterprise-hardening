@@ -21,6 +21,80 @@
     - Restart permissions
   tags: [permissions, config, hardening]
 
+- name: Fix file permissions - SSH config
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0600'
+  tags: [permissions, hardening]
+
+- name: Fix file permissions - crontab
+  ansible.builtin.file:
+    path: /etc/crontab
+    owner: root
+    group: root
+    mode: '0600'
+  tags: [permissions, hardening]
+
+- name: Fix directory permissions - cron.d
+  ansible.builtin.file:
+    path: "/etc/cron.d"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: [permissions, hardening]
+
+- name: Fix directory permissions - cron.daily
+  ansible.builtin.file:
+    path: "/etc/cron.daily"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: [permissions, hardening]
+
+- name: Fix directory permissions - cron.hourly
+  ansible.builtin.file:
+    path: "/etc/cron.hourly"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: [permissions, hardening]
+
+- name: Fix directory permissions - cron.weekly
+  ansible.builtin.file:
+    path: "/etc/cron.weekly"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: [permissions, hardening]
+
+- name: Fix directory permissions - cron.monthly
+  ansible.builtin.file:
+    path: "/etc/cron.monthly"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: [permissions, hardening]
+
+- name: Fix file permissions - CUPS config
+  ansible.builtin.file:
+    path: /etc/cups/cupsd.conf
+    owner: root
+    group: lpadmin
+    mode: '0640'
+  ignore_errors: true
+  tags: [permissions, hardening]
+
+- name: Fix file permissions - squid config
+  ansible.builtin.file:
+    path: /etc/squid/squid.conf
+    owner: root
+    group: root
+    mode: '0640'
+  ignore_errors: true
+  tags: [permissions, hardening]
+
 - name: Ensure permissions service state
   ansible.builtin.service:
     name: "{ permissions_service_name | default('permissions') }"

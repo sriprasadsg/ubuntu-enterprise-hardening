@@ -1,0 +1,5 @@
+---
+- name: Update GRUB configuration
+  ansible.builtin.debug:
+    msg: "GRUB configuration updated"
+  listen: "Update GRUB"

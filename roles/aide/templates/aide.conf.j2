@@ -1,1 +1,27 @@
 # Managed by Ansible for aide
+# AIDE Configuration File
+# This file is automatically maintained by Ansible
+
+# Global Rules
+database=file:/var/lib/aide/aide.db
+database_out=file:/var/lib/aide/aide.db.new
+database_root=/var/lib/aide/
+gzip_dbout=yes
+verbose=20
+
+# Directory rules
+/bin			R
+/sbin			R
+/usr/bin		R
+/usr/sbin		R
+/lib			R
+/lib64			R
+/usr/lib		R
+/usr/lib64		R
+
+# Exclude frequently changing files
+!/var/log
+!/var/cache
+!/var/tmp
+!/tmp
+

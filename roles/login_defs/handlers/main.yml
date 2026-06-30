@@ -1,0 +1,5 @@
+---
+- name: Apply login.defs changes
+  ansible.builtin.debug:
+    msg: "Login.defs configuration updated"
+  listen: "Apply login.defs"

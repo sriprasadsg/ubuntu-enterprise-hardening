@@ -1,1 +1,9 @@
 # Managed by Ansible for squid
+# Suppress version string for security
+httpd_suppress_version_string on
+# Limit response body size
+reply_body_max_size 10 MB
+# Basic ACLs
+acl Safe_ports port 80 443
+acl CONNECT method CONNECT
+

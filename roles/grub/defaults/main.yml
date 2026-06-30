@@ -1,0 +1,3 @@
+---
+# GRUB bootloader hardening defaults
+grub_password: ""

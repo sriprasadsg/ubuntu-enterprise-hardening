@@ -1,5 +1,6 @@
 # Managed by Ansible for enterprise SSH hardening
 Port 22
+AddressFamily inet
 Protocol 2
 PermitRootLogin no
 PasswordAuthentication no
@@ -9,9 +10,21 @@ X11Forwarding no
 AllowAgentForwarding no
 AllowTcpForwarding no
 PermitEmptyPasswords no
+PermitUserEnvironment no
+PermitTunnel no
 ClientAliveInterval 300
 ClientAliveCountMax 2
 MaxAuthTries 3
+MaxSessions 2
+LoginGraceTime 30
+StrictModes yes
+IgnoreRhosts yes
+HostbasedAuthentication no
+RhostsRSAAuthentication no
+RSAAuthentication no
+FingerprintHash sha256
+LogLevel VERBOSE
+SyslogFacility AUTH
 HostKey /etc/ssh/ssh_host_ed25519_key
 HostKey /etc/ssh/ssh_host_rsa_key
 KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
